@@ -1,0 +1,1649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GPU-Powered Retail Analytics — India 2024</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --gpu-green: #76b900;
+    --gpu-dark: #0a0a0a;
+    --gpu-card: #111111;
+    --gpu-border: #222222;
+    --gpu-accent: #00d4aa;
+    --gpu-orange: #ff6b35;
+    --gpu-purple: #a855f7;
+    --gpu-blue: #3b82f6;
+    --gpu-yellow: #fbbf24;
+    --gpu-pink: #ec4899;
+    --text-primary: #f0f0f0;
+    --text-secondary: #888888;
+    --text-muted: #555555;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--gpu-dark);
+    color: var(--text-primary);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* ===== PARTICLE BG ===== */
+  #particles-canvas {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 0; opacity: 0.35;
+  }
+
+  .page-wrap { position: relative; z-index: 1; }
+
+  /* ===== HEADER ===== */
+  header {
+    padding: 0 2rem;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--gpu-border);
+    background: rgba(10,10,10,0.95);
+    position: sticky; top: 0; z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+
+  .logo-area {
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  .nvidia-badge {
+    background: var(--gpu-green);
+    color: #000;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+    animation: pulse-green 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-green {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(118,185,0,0.4); }
+    50% { box-shadow: 0 0 0 6px rgba(118,185,0,0); }
+  }
+
+  .header-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.02em;
+  }
+
+  .header-subtitle {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-family: 'Space Mono', monospace;
+  }
+
+  .header-right {
+    display: flex; align-items: center; gap: 16px;
+  }
+
+  .live-badge {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; color: var(--gpu-accent);
+    font-family: 'Space Mono', monospace;
+  }
+
+  .live-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--gpu-accent);
+    animation: blink 1.2s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; } 50% { opacity: 0.2; }
+  }
+
+  .gpu-meter {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px; color: var(--text-secondary);
+    font-family: 'Space Mono', monospace;
+  }
+
+  .gpu-bar {
+    width: 60px; height: 6px;
+    background: var(--gpu-border);
+    border-radius: 3px; overflow: hidden;
+  }
+
+  .gpu-fill {
+    height: 100%; width: 78%;
+    background: linear-gradient(90deg, var(--gpu-green), var(--gpu-accent));
+    border-radius: 3px;
+    animation: gpu-load 3s ease-in-out infinite alternate;
+  }
+
+  @keyframes gpu-load {
+    from { width: 72%; } to { width: 91%; }
+  }
+
+  /* ===== HERO STATS ===== */
+  .hero {
+    padding: 2rem 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .hero-top {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+  }
+
+  .hero-headline {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(22px, 3vw, 36px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+  }
+
+  .hero-headline .accent { color: var(--gpu-green); }
+  .hero-headline .accent2 { color: var(--gpu-accent); }
+
+  .processing-info {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 8px;
+    display: flex; gap: 16px; flex-wrap: wrap;
+  }
+
+  .processing-info span { color: var(--gpu-green); }
+
+  .stat-chips {
+    display: flex; gap: 10px; flex-wrap: wrap;
+  }
+
+  .stat-chip {
+    background: var(--gpu-card);
+    border: 1px solid var(--gpu-border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    text-align: center;
+    min-width: 110px;
+    transition: border-color 0.3s;
+  }
+
+  .stat-chip:hover { border-color: var(--gpu-green); }
+
+  .stat-chip-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .stat-chip-label {
+    font-size: 10px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* ===== TABS ===== */
+  .tabs-bar {
+    padding: 0 2rem;
+    display: flex; gap: 4px;
+    border-bottom: 1px solid var(--gpu-border);
+    background: rgba(10,10,10,0.9);
+    position: sticky; top: 64px; z-index: 90;
+    overflow-x: auto;
+  }
+
+  .tab-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 12px 20px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.2s;
+    white-space: nowrap;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .tab-btn.active {
+    color: #fff;
+    border-bottom-color: var(--gpu-green);
+  }
+
+  .tab-btn:hover:not(.active) { color: #ccc; }
+
+  .tab-icon {
+    width: 18px; height: 18px;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+  }
+
+  /* ===== MAIN CONTENT ===== */
+  .content-area {
+    padding: 1.5rem 2rem 3rem;
+    display: none;
+  }
+
+  .content-area.active { display: block; }
+
+  /* ===== CARDS ===== */
+  .card {
+    background: var(--gpu-card);
+    border: 1px solid var(--gpu-border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    transition: border-color 0.3s, transform 0.2s;
+  }
+
+  .card:hover { border-color: #333; }
+
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+    letter-spacing: -0.01em;
+  }
+
+  .card-subtitle {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  /* ===== DATASHADER VIZ ===== */
+  .datashader-area {
+    position: relative;
+    width: 100%;
+    height: 320px;
+    background: #050505;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #1a1a1a;
+  }
+
+  .ds-canvas {
+    width: 100%; height: 100%;
+  }
+
+  .ds-overlay {
+    position: absolute; top: 8px; right: 8px;
+    background: rgba(0,0,0,0.7);
+    border: 1px solid var(--gpu-border);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--gpu-green);
+  }
+
+  /* ===== HEATMAP ===== */
+  .heatmap-grid {
+    display: grid;
+    gap: 3px;
+    padding: 8px;
+  }
+
+  .heatmap-cell {
+    border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    font-family: 'Space Mono', monospace;
+    transition: transform 0.15s, opacity 0.2s;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .heatmap-cell:hover {
+    transform: scale(1.08);
+    z-index: 10;
+    outline: 2px solid #fff;
+    outline-offset: 1px;
+  }
+
+  /* ===== LEGEND ===== */
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-top: 12px;
+  }
+
+  .legend-item {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 11px; color: var(--text-secondary);
+  }
+
+  .legend-dot {
+    width: 10px; height: 10px; border-radius: 2px;
+  }
+
+  /* ===== BARS ===== */
+  .bar-row {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .bar-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    width: 120px;
+    text-align: right;
+    flex-shrink: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .bar-track {
+    flex: 1; height: 24px;
+    background: #1a1a1a;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    display: flex; align-items: center; padding-left: 8px;
+    font-size: 11px; font-weight: 700; color: rgba(0,0,0,0.8);
+    transition: width 1.5s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  /* ===== SCATTER PLOTS ===== */
+  .scatter-canvas {
+    width: 100%; height: 280px;
+  }
+
+  /* ===== TICKER ===== */
+  .ticker-wrap {
+    overflow: hidden;
+    background: #050505;
+    border-top: 1px solid var(--gpu-border);
+    border-bottom: 1px solid var(--gpu-border);
+    padding: 8px 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .ticker-inner {
+    display: flex; gap: 40px;
+    animation: ticker-scroll 25s linear infinite;
+    width: max-content;
+  }
+
+  @keyframes ticker-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  .ticker-item {
+    display: flex; align-items: center; gap: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+
+  .ticker-item .up { color: #22c55e; }
+  .ticker-item .down { color: #ef4444; }
+  .ticker-item .symbol { color: #fff; font-weight: 700; }
+
+  /* ===== TOOLTIPS ===== */
+  .tooltip-custom {
+    position: fixed;
+    background: rgba(10,10,10,0.98);
+    border: 1px solid var(--gpu-border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+    pointer-events: none;
+    z-index: 999;
+    display: none;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+    max-width: 220px;
+  }
+
+  .tooltip-custom.visible { display: block; }
+
+  .tooltip-label { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--text-secondary); margin-bottom: 4px; }
+  .tooltip-value { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: #fff; }
+  .tooltip-sub { font-size: 11px; color: var(--gpu-green); margin-top: 2px; }
+
+  /* ===== INSIGHT CARDS ===== */
+  .insight-card {
+    background: linear-gradient(135deg, #0d1f0d, #0a1a2e);
+    border: 1px solid #1a3a1a;
+    border-radius: 10px;
+    padding: 1rem;
+    display: flex; gap: 12px; align-items: flex-start;
+    transition: border-color 0.3s;
+  }
+
+  .insight-card:hover { border-color: var(--gpu-green); }
+
+  .insight-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+    background: rgba(118,185,0,0.15);
+  }
+
+  .insight-text .insight-title {
+    font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 3px;
+  }
+
+  .insight-text .insight-body {
+    font-size: 11px; color: var(--text-secondary); line-height: 1.5;
+  }
+
+  /* ===== PROGRESS RINGS ===== */
+  .ring-wrap {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+  }
+
+  .ring-label {
+    font-size: 11px; color: var(--text-secondary);
+    text-align: center; max-width: 80px; line-height: 1.3;
+  }
+
+  /* ===== ANIMATED COUNTER ===== */
+  .counter { display: inline-block; }
+
+  /* ===== PROCESSING LOG ===== */
+  .process-log {
+    background: #050505;
+    border: 1px solid var(--gpu-border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--text-secondary);
+    height: 120px;
+    overflow-y: auto;
+    line-height: 1.8;
+  }
+
+  .log-line { margin: 0; }
+  .log-line .ts { color: var(--text-muted); }
+  .log-line .ok { color: var(--gpu-green); }
+  .log-line .info { color: var(--gpu-accent); }
+  .log-line .warn { color: var(--gpu-yellow); }
+
+  /* ===== FILTER BAR ===== */
+  .filter-bar {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+
+  .filter-chip {
+    background: var(--gpu-card);
+    border: 1px solid var(--gpu-border);
+    color: var(--text-secondary);
+    font-size: 11px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .filter-chip.active, .filter-chip:hover {
+    border-color: var(--gpu-green);
+    color: var(--gpu-green);
+    background: rgba(118,185,0,0.08);
+  }
+
+  /* ===== IMAGE TILES ===== */
+  .img-tile {
+    border-radius: 10px; overflow: hidden;
+    aspect-ratio: 16/9;
+    position: relative;
+    background: #111;
+    cursor: pointer;
+  }
+
+  .img-tile img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.4s, filter 0.3s;
+    filter: brightness(0.75) saturate(0.9);
+  }
+
+  .img-tile:hover img {
+    transform: scale(1.06);
+    filter: brightness(0.9) saturate(1.1);
+  }
+
+  .img-tile-label {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.9));
+    padding: 20px 12px 10px;
+    font-size: 12px; font-weight: 600; color: #fff;
+  }
+
+  .img-tile-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px; font-weight: 800;
+    color: var(--gpu-green);
+  }
+
+  /* ===== SECTION LABEL ===== */
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--gpu-green);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1; height: 1px;
+    background: linear-gradient(90deg, var(--gpu-border), transparent);
+  }
+
+  /* ===== ANIMATED ENTRY ===== */
+  .fade-up {
+    opacity: 0; transform: translateY(20px);
+    animation: fade-up-anim 0.5s ease forwards;
+  }
+
+  @keyframes fade-up-anim {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .delay-1 { animation-delay: 0.1s; }
+  .delay-2 { animation-delay: 0.2s; }
+  .delay-3 { animation-delay: 0.3s; }
+  .delay-4 { animation-delay: 0.4s; }
+
+  /* ===== SCROLLBAR ===== */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--gpu-dark); }
+  ::-webkit-scrollbar-thumb { background: var(--gpu-border); border-radius: 3px; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 600px) {
+    header { padding: 0 1rem; }
+    .hero { padding: 1rem; }
+    .content-area { padding: 1rem; }
+  }
+
+  /* ===== GLOW EFFECTS ===== */
+  .glow-green { text-shadow: 0 0 20px rgba(118,185,0,0.5); }
+  .glow-teal { text-shadow: 0 0 20px rgba(0,212,170,0.5); }
+
+  /* ===== SANKEY ===== */
+  .sankey-svg { width: 100%; }
+
+  /* ===== DONUT ===== */
+  .donut-wrap {
+    position: relative; width: 140px; height: 140px;
+    flex-shrink: 0;
+  }
+
+  .donut-center {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    text-align: center;
+  }
+
+  .donut-center-val {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px; font-weight: 800; color: #fff;
+    line-height: 1;
+  }
+
+  .donut-center-lbl {
+    font-size: 9px; color: var(--text-muted);
+    font-family: 'Space Mono', monospace;
+  }
+</style>
+</head>
+<body>
+<canvas id="particles-canvas"></canvas>
+<div class="page-wrap">
+
+<!-- ===== HEADER ===== -->
+<header>
+  <div class="logo-area">
+    <div class="nvidia-badge">RAPIDS GPU</div>
+    <div>
+      <div class="header-title">Retail Intelligence</div>
+      <div class="header-subtitle">50M rows · cuDF · Datashader</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="gpu-meter">
+      <span>GPU</span>
+      <div class="gpu-bar"><div class="gpu-fill"></div></div>
+      <span id="gpu-pct">78%</span>
+    </div>
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      <span>LIVE DATA</span>
+    </div>
+  </div>
+</header>
+
+<!-- ===== TICKER ===== -->
+<div class="ticker-wrap">
+  <div class="ticker-inner" id="ticker"></div>
+</div>
+
+<!-- ===== HERO ===== -->
+<div class="hero">
+  <div class="hero-top">
+    <div>
+      <div class="hero-headline">
+        <span class="accent">50M Transactions</span><br>
+        Visualised at <span class="accent2">GPU Speed</span>
+      </div>
+      <div class="processing-info">
+        <span>DATASET:</span> India Retail FY2024 &nbsp;|&nbsp;
+        <span>ENGINE:</span> NVIDIA RAPIDS cuDF &nbsp;|&nbsp;
+        <span>RENDER:</span> Datashader &nbsp;|&nbsp;
+        <span>CCY:</span> ₹ INR
+      </div>
+    </div>
+    <div class="stat-chips">
+      <div class="stat-chip fade-up">
+        <div class="stat-chip-value glow-green" id="counter-revenue">₹0</div>
+        <div class="stat-chip-label">Total Revenue</div>
+      </div>
+      <div class="stat-chip fade-up delay-1">
+        <div class="stat-chip-value" id="counter-txn">0</div>
+        <div class="stat-chip-label">Transactions</div>
+      </div>
+      <div class="stat-chip fade-up delay-2">
+        <div class="stat-chip-value" id="counter-cats">0</div>
+        <div class="stat-chip-label">Categories</div>
+      </div>
+      <div class="stat-chip fade-up delay-3">
+        <div class="stat-chip-value" id="counter-aov">₹0</div>
+        <div class="stat-chip-label">Avg Order</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TABS ===== -->
+<div class="tabs-bar">
+  <button class="tab-btn active" onclick="switchTab('payment')" id="tab-payment">
+    <div class="tab-icon" style="background:rgba(118,185,0,0.15);color:var(--gpu-green);">💳</div>
+    Category vs Payment
+  </button>
+  <button class="tab-btn" onclick="switchTab('region')" id="tab-region">
+    <div class="tab-icon" style="background:rgba(0,212,170,0.15);color:var(--gpu-accent);">📍</div>
+    Category vs Region
+  </button>
+  <button class="tab-btn" onclick="switchTab('segment')" id="tab-segment">
+    <div class="tab-icon" style="background:rgba(168,85,247,0.15);color:var(--gpu-purple);">👥</div>
+    Customer Segment
+  </button>
+</div>
+
+<!-- ===== TAB 1: CATEGORY vs PAYMENT ===== -->
+<div class="content-area active" id="content-payment">
+
+  <div class="section-label">Datashader Density Plot — Category × Payment Method</div>
+
+  <div class="filter-bar" id="filter-payment"></div>
+
+  <div class="grid-2" style="margin-bottom:1rem;">
+    <div class="card fade-up">
+      <div class="card-title">Payment Method Distribution by Category</div>
+      <div class="card-subtitle">50M transactions · kernel density estimation · GPU-rendered</div>
+      <div class="datashader-area">
+        <canvas class="ds-canvas" id="ds-payment-canvas"></canvas>
+        <div class="ds-overlay">cuDF · 50M pts</div>
+      </div>
+      <div class="legend" id="legend-payment"></div>
+    </div>
+
+    <div class="card fade-up delay-1">
+      <div class="card-title">Heatmap — Category × Payment</div>
+      <div class="card-subtitle">Transaction volume (₹ Cr) — hover for detail</div>
+      <div id="heatmap-container"></div>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div class="card fade-up">
+      <div class="card-title">Top Categories by UPI Share</div>
+      <div class="card-subtitle">% transactions via UPI</div>
+      <div id="upi-bars"></div>
+    </div>
+    <div class="card fade-up delay-1">
+      <div class="card-title">Payment Mix — Sankey</div>
+      <div class="card-subtitle">Flow from category to payment type</div>
+      <canvas id="chart-sankey" class="scatter-canvas" style="height:220px;"></canvas>
+    </div>
+    <div class="card fade-up delay-2">
+      <div class="card-title">GPU Processing Log</div>
+      <div class="card-subtitle">Real-time cuDF operations</div>
+      <div class="process-log" id="proc-log"></div>
+    </div>
+  </div>
+
+  <div class="grid-3" style="margin-top:1rem;">
+    <div class="insight-card fade-up">
+      <div class="insight-icon">📱</div>
+      <div class="insight-text">
+        <div class="insight-title">UPI Dominates Fashion</div>
+        <div class="insight-body">Fashion & Apparel shows 68% UPI adoption, highest across all categories. Driven by Meesho & Myntra super-app checkout flows.</div>
+      </div>
+    </div>
+    <div class="insight-card fade-up delay-1">
+      <div class="insight-icon">🏦</div>
+      <div class="insight-text">
+        <div class="insight-title">EMI Preferred for Electronics</div>
+        <div class="insight-body">Electronics category: 54% of ₹10,000+ purchases via EMI. Avg ticket ₹42,000. Bajaj Finance & ZestMoney key partners.</div>
+      </div>
+    </div>
+    <div class="insight-card fade-up delay-2">
+      <div class="insight-icon">💰</div>
+      <div class="insight-text">
+        <div class="insight-title">Cash Still Leads Grocery</div>
+        <div class="insight-body">Grocery & FMCG: 43% cash on delivery. Tier-3 cities account for 71% of COD transactions. Average order ₹890.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TAB 2: CATEGORY vs REGION ===== -->
+<div class="content-area" id="content-region">
+
+  <div class="section-label">Regional Buying Patterns — India Tier Analysis</div>
+
+  <div class="filter-bar" id="filter-region"></div>
+
+  <div class="grid-2" style="margin-bottom:1rem;">
+    <div class="card fade-up">
+      <div class="card-title">Category Revenue by Region (₹ Cr)</div>
+      <div class="card-subtitle">Grouped bar chart · 8 regions · GPU aggregated</div>
+      <div style="position:relative;height:300px;">
+        <canvas id="chart-region-bar" role="img" aria-label="Category revenue by region India">Regional revenue chart</canvas>
+      </div>
+    </div>
+    <div class="card fade-up delay-1">
+      <div class="card-title">Regional Preference Index</div>
+      <div class="card-subtitle">Deviation from national average per category</div>
+      <div style="position:relative;height:300px;">
+        <canvas id="chart-radar" role="img" aria-label="Radar chart showing regional preference by product category">Regional preference radar</canvas>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:1rem;" class="card fade-up">
+    <div class="card-title">India Region × Category Density Heatmap</div>
+    <div class="card-subtitle">Darker = higher transaction density · Datashader kernel · hover for ₹ values</div>
+    <div id="region-heatmap-container"></div>
+  </div>
+
+  <div class="grid-3">
+    <div class="img-tile fade-up">
+      <img src="https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=400&q=75" alt="Mumbai market" loading="lazy">
+      <div class="img-tile-label">
+        <div class="img-tile-value">₹2,847 Cr</div>
+        Mumbai Metro
+      </div>
+    </div>
+    <div class="img-tile fade-up delay-1">
+      <img src="https://images.unsplash.com/photo-1617469165786-8007eda3caa7?w=400&q=75" alt="Delhi market" loading="lazy">
+      <div class="img-tile-label">
+        <div class="img-tile-value">₹2,612 Cr</div>
+        Delhi NCR
+      </div>
+    </div>
+    <div class="img-tile fade-up delay-2">
+      <img src="https://images.unsplash.com/photo-1596797882870-8c33db71-bd4e?w=400&q=75" alt="Bangalore tech" loading="lazy">
+      <div class="img-tile-label">
+        <div class="img-tile-value">₹1,984 Cr</div>
+        Bengaluru
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-3" style="margin-top:1rem;">
+    <div class="insight-card fade-up">
+      <div class="insight-icon">🏙️</div>
+      <div class="insight-text">
+        <div class="insight-title">North India — Electronics Hub</div>
+        <div class="insight-body">Delhi NCR contributes 31% of Electronics revenue. Festival season spikes: 340% increase during Diwali week.</div>
+      </div>
+    </div>
+    <div class="insight-card fade-up delay-1">
+      <div class="insight-icon">👗</div>
+      <div class="insight-text">
+        <div class="insight-title">West India — Fashion Leader</div>
+        <div class="insight-body">Maharashtra & Gujarat dominate Apparel at 38% national share. Mumbai's premium fashion segment grows 22% YoY.</div>
+      </div>
+    </div>
+    <div class="insight-card fade-up delay-2">
+      <div class="insight-icon">🌾</div>
+      <div class="insight-text">
+        <div class="insight-title">East India — FMCG Stronghold</div>
+        <div class="insight-body">West Bengal, Odisha, Bihar: 44% revenue from FMCG. Kolkata's Kirana digitization drives 89% rural coverage.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TAB 3: CUSTOMER SEGMENT ===== -->
+<div class="content-area" id="content-segment">
+
+  <div class="section-label">Customer Behaviour Analysis — Segment × Spending Patterns</div>
+
+  <div class="filter-bar" id="filter-segment"></div>
+
+  <div class="grid-2" style="margin-bottom:1rem;">
+    <div class="card fade-up">
+      <div class="card-title">Avg Spend per Transaction by Segment (₹)</div>
+      <div class="card-subtitle">50M transaction sample · cuDF GroupBy aggregation</div>
+      <div style="position:relative;height:280px;">
+        <canvas id="chart-segment-spend" role="img" aria-label="Average spend per transaction by customer segment">Segment spending chart</canvas>
+      </div>
+    </div>
+
+    <div class="card fade-up delay-1">
+      <div class="card-title">Purchase Frequency × Basket Size</div>
+      <div class="card-subtitle">Bubble size = customer count (millions)</div>
+      <div style="position:relative;height:280px;">
+        <canvas id="chart-bubble" role="img" aria-label="Bubble chart of purchase frequency vs basket size by segment">Frequency vs basket bubble chart</canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:1rem;">
+    <div class="card fade-up">
+      <div class="card-title">Premium Segment Breakdown</div>
+      <div class="card-subtitle">Category mix for ₹50K+ spenders</div>
+      <div style="display:flex;align-items:center;gap:16px;margin-top:8px;">
+        <div class="donut-wrap">
+          <canvas id="chart-donut-premium" width="140" height="140" role="img" aria-label="Donut chart premium segment category breakdown">Premium segment</canvas>
+          <div class="donut-center">
+            <div class="donut-center-val">4.2M</div>
+            <div class="donut-center-lbl">CUSTOMERS</div>
+          </div>
+        </div>
+        <div id="donut-premium-legend" style="flex:1;"></div>
+      </div>
+    </div>
+
+    <div class="card fade-up delay-1">
+      <div class="card-title">Mass Market Breakdown</div>
+      <div class="card-subtitle">Category mix for ₹5K–₹20K spenders</div>
+      <div style="display:flex;align-items:center;gap:16px;margin-top:8px;">
+        <div class="donut-wrap">
+          <canvas id="chart-donut-mass" width="140" height="140" role="img" aria-label="Donut chart mass market category breakdown">Mass market segment</canvas>
+          <div class="donut-center">
+            <div class="donut-center-val">28.6M</div>
+            <div class="donut-center-lbl">CUSTOMERS</div>
+          </div>
+        </div>
+        <div id="donut-mass-legend" style="flex:1;"></div>
+      </div>
+    </div>
+
+    <div class="card fade-up delay-2">
+      <div class="card-title">Rural Emerging Segment</div>
+      <div class="card-subtitle">Category mix for first-time online buyers</div>
+      <div style="display:flex;align-items:center;gap:16px;margin-top:8px;">
+        <div class="donut-wrap">
+          <canvas id="chart-donut-rural" width="140" height="140" role="img" aria-label="Donut chart rural segment category breakdown">Rural segment</canvas>
+          <div class="donut-center">
+            <div class="donut-center-val">17.2M</div>
+            <div class="donut-center-lbl">CUSTOMERS</div>
+          </div>
+        </div>
+        <div id="donut-rural-legend" style="flex:1;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card fade-up" style="margin-bottom:1rem;">
+    <div class="card-title">Segment Behaviour Radar — Multi-Dimension Analysis</div>
+    <div class="card-subtitle">Normalised scores across 6 behavioural dimensions</div>
+    <div style="position:relative;height:320px;max-width:500px;margin:0 auto;">
+      <canvas id="chart-radar-seg" role="img" aria-label="Radar chart showing behavioural dimensions across customer segments">Segment behaviour radar</canvas>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div class="insight-card fade-up">
+      <div class="insight-icon">💎</div>
+      <div class="insight-text">
+        <div class="insight-title">Premium: Experience over Price</div>
+        <div class="insight-body">Avg ₹8,400/order. 78% repeat within 30 days. Electronics + Luxury Goods = 61% of spend. Weekend purchase peak: 4pm–8pm.</div>
+      </div>
+    </div>
+    <div class="insight-card fade-up delay-1">
+      <div class="insight-icon">🏪</div>
+      <div class="insight-text">
+        <div class="insight-title">Mass Market: Value-Driven</div>
+        <div class="insight-body">Avg ₹1,240/order. 89% price-sensitive. Festival sales drive 67% of annual GMV. Cashback & coupon redemption: 4.2x baseline.</div>
+      </div>
+    </div>
+    <div class="insight-card fade-up delay-2">
+      <div class="insight-icon">🌱</div>
+      <div class="insight-text">
+        <div class="insight-title">Rural Emerging: Mobile-First</div>
+        <div class="insight-body">Avg ₹620/order. 94% mobile purchases. Vernacular UI adoption: 78%. WhatsApp Commerce drives 34% of first orders.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</div><!-- /page-wrap -->
+
+<!-- TOOLTIP -->
+<div class="tooltip-custom" id="tooltip">
+  <div class="tooltip-label" id="tt-label"></div>
+  <div class="tooltip-value" id="tt-value"></div>
+  <div class="tooltip-sub" id="tt-sub"></div>
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const CATEGORIES = ['Electronics','Fashion','Grocery','Home Decor','Beauty','Sports','Books','Toys','Jewellery','Auto Parts'];
+const PAYMENT_METHODS = ['UPI','Credit Card','Debit Card','EMI','Cash/COD','Net Banking','Wallet','BNPL'];
+const REGIONS = ['North India','West India','South India','East India','Central India','Northeast','J&K/Himachal','Goa/Islands'];
+const SEGMENTS = ['Premium (₹50K+)','Upper Middle','Middle Class','Mass Market','Rural Emerging','Students','Senior Citizens'];
+const COLORS = {
+  upi: '#76b900', credit: '#3b82f6', debit: '#00d4aa', emi: '#fbbf24',
+  cod: '#ef4444', netbank: '#a855f7', wallet: '#f97316', bnpl: '#ec4899'
+};
+const PAY_COLORS = ['#76b900','#3b82f6','#00d4aa','#fbbf24','#ef4444','#a855f7','#f97316','#ec4899'];
+const REG_COLORS = ['#76b900','#3b82f6','#00d4aa','#fbbf24','#ef4444','#a855f7','#f97316','#10b981'];
+const SEG_COLORS = ['#76b900','#3b82f6','#00d4aa','#fbbf24','#ef4444','#a855f7','#f97316'];
+
+// Heatmap data: [category][payment] = ₹ Cr
+const PAYMENT_HEAT = [
+  [420,280,190,310,85,120,95,45],  // Electronics
+  [680,155,210,90,180,70,140,65],  // Fashion
+  [310,90,195,20,430,55,180,25],   // Grocery
+  [290,140,170,55,150,80,90,40],   // Home Decor
+  [520,110,160,35,95,60,110,50],   // Beauty
+  [380,125,145,40,110,55,85,35],   // Sports
+  [190,65,80,15,70,35,55,20],      // Books
+  [230,80,95,25,130,40,70,30],     // Toys
+  [350,290,180,120,60,85,45,55],   // Jewellery
+  [260,110,130,180,95,60,50,25],   // Auto Parts
+];
+
+// Regional data
+const REGION_DATA = {
+  Electronics: [520,480,410,290,310,120,80,45],
+  Fashion:     [380,420,390,280,210,90,60,35],
+  Grocery:     [290,340,380,420,310,140,80,50],
+  'Home Decor':[210,290,240,180,160,70,45,30],
+  Beauty:      [180,220,260,160,140,65,40,25],
+};
+
+// Segment spend averages
+const SEG_SPEND = [8420, 4180, 2340, 1240, 620, 890, 1680];
+const SEG_FREQ  = [4.2, 2.8, 2.1, 1.6, 0.9, 1.4, 1.8]; // orders/month
+const SEG_BASKET= [8420, 4180, 2340, 1240, 620, 890, 1680];
+const SEG_COUNT = [4.2, 8.6, 14.2, 28.6, 17.2, 9.8, 5.4]; // millions
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('DOMContentLoaded', () => {
+  initParticles();
+  initTicker();
+  animateCounters();
+  initGPUMeter();
+  buildPaymentTab();
+  buildRegionTab();
+  buildSegmentTab();
+  startProcessLog();
+});
+
+// ============================================================
+// PARTICLES
+// ============================================================
+function initParticles() {
+  const c = document.getElementById('particles-canvas');
+  const ctx = c.getContext('2d');
+  let W, H, pts = [];
+
+  function resize() {
+    W = c.width = window.innerWidth;
+    H = c.height = window.innerHeight;
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+
+  for (let i = 0; i < 80; i++) {
+    pts.push({
+      x: Math.random() * 2000, y: Math.random() * 1200,
+      r: Math.random() * 1.5 + 0.3,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      c: Math.random() > 0.7 ? '#76b900' : '#00d4aa'
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    pts.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+      if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fillStyle = p.c;
+      ctx.fill();
+    });
+
+    // Draw some lines between close particles
+    for (let i = 0; i < pts.length; i++) {
+      for (let j = i+1; j < pts.length; j++) {
+        const dx = pts[i].x - pts[j].x;
+        const dy = pts[i].y - pts[j].y;
+        const d = Math.sqrt(dx*dx + dy*dy);
+        if (d < 120) {
+          ctx.beginPath();
+          ctx.moveTo(pts[i].x, pts[i].y);
+          ctx.lineTo(pts[j].x, pts[j].y);
+          ctx.strokeStyle = `rgba(118,185,0,${0.15*(1-d/120)})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ============================================================
+// TICKER
+// ============================================================
+function initTicker() {
+  const items = [
+    {sym:'RELIANCE',val:'₹2,847',chg:'+1.4%',up:true},
+    {sym:'TATA MOTORS',val:'₹782',chg:'+0.8%',up:true},
+    {sym:'HDFC BANK',val:'₹1,620',chg:'-0.3%',up:false},
+    {sym:'INFOSYS',val:'₹1,485',chg:'+2.1%',up:true},
+    {sym:'FLIPKART GMV',val:'₹92,400 Cr',chg:'+18%',up:true},
+    {sym:'AMAZON IN',val:'₹74,600 Cr',chg:'+12%',up:true},
+    {sym:'MEESHO',val:'₹21,000 Cr',chg:'+67%',up:true},
+    {sym:'NYKAA',val:'₹6,200 Cr',chg:'+24%',up:true},
+    {sym:'UPI TXNS MAR',val:'13.4B',chg:'+47%',up:true},
+    {sym:'D-MART',val:'₹1,340',chg:'+1.1%',up:true},
+    {sym:'ZOMATO',val:'₹214',chg:'+3.2%',up:true},
+    {sym:'BLINKIT',val:'₹8,400 Cr',chg:'+210%',up:true},
+  ];
+  const doubled = [...items,...items];
+  const t = document.getElementById('ticker');
+  t.innerHTML = doubled.map(i=>`
+    <div class="ticker-item">
+      <span class="symbol">${i.sym}</span>
+      <span>${i.val}</span>
+      <span class="${i.up?'up':'down'}">${i.chg}</span>
+    </div>
+  `).join('');
+}
+
+// ============================================================
+// COUNTERS
+// ============================================================
+function animateCounters() {
+  animCounter('counter-revenue', 0, 847, 1800, v=>`₹${v.toFixed(0)}Cr`);
+  animCounter('counter-txn', 0, 50, 1800, v=>`${v.toFixed(1)}M`);
+  animCounter('counter-cats', 0, 10, 1200, v=>`${Math.floor(v)}`);
+  animCounter('counter-aov', 0, 2847, 1800, v=>`₹${Math.floor(v).toLocaleString('en-IN')}`);
+}
+
+function animCounter(id, from, to, dur, fmt) {
+  const el = document.getElementById(id);
+  const start = performance.now();
+  function step(now) {
+    const p = Math.min((now-start)/dur,1);
+    const ease = 1-Math.pow(1-p,3);
+    el.textContent = fmt(from + (to-from)*ease);
+    if (p<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+// ============================================================
+// GPU METER
+// ============================================================
+function initGPUMeter() {
+  setInterval(() => {
+    const v = 72 + Math.floor(Math.random()*20);
+    document.getElementById('gpu-pct').textContent = v+'%';
+  }, 2000);
+}
+
+// ============================================================
+// PROCESS LOG
+// ============================================================
+function startProcessLog() {
+  const log = document.getElementById('proc-log');
+  const lines = [
+    {ts:'09:41:22',cls:'ok',msg:'cuDF DataFrame loaded — 50,241,887 rows × 14 cols'},
+    {ts:'09:41:23',cls:'info',msg:'GPU mem allocated: 3.2 GB / 24 GB (NVIDIA A100)'},
+    {ts:'09:41:24',cls:'ok',msg:'GroupBy payment_method × category — 0.18s'},
+    {ts:'09:41:24',cls:'info',msg:'Datashader canvas 4096×2048 rendered — 0.04s'},
+    {ts:'09:41:25',cls:'ok',msg:'Heatmap kernel density complete'},
+    {ts:'09:41:26',cls:'warn',msg:'Outlier detection: 12,441 anomalous transactions flagged'},
+    {ts:'09:41:27',cls:'ok',msg:'Regional aggregation: 8 zones × 10 categories — 0.09s'},
+    {ts:'09:41:28',cls:'info',msg:'Segment clustering (K-means k=7) — GPU 0.31s'},
+    {ts:'09:41:29',cls:'ok',msg:'Dashboard state serialised — ready'},
+  ];
+  let i = 0;
+  function addLine() {
+    if (i < lines.length) {
+      const l = lines[i];
+      log.innerHTML += `<p class="log-line"><span class="ts">[${l.ts}]</span> <span class="${l.cls}">${l.msg}</span></p>`;
+      log.scrollTop = log.scrollHeight;
+      i++;
+      setTimeout(addLine, 600 + Math.random()*400);
+    } else {
+      setTimeout(() => {
+        log.innerHTML += `<p class="log-line"><span class="ts">[${new Date().toLocaleTimeString()}]</span> <span class="ok">Stream update received — refreshing aggregates...</span></p>`;
+        log.scrollTop = log.scrollHeight;
+        i = 0;
+        setTimeout(addLine, 4000);
+      }, 3000);
+    }
+  }
+  addLine();
+}
+
+// ============================================================
+// TOOLTIP HELPERS
+// ============================================================
+const tooltip = document.getElementById('tooltip');
+function showTip(e, label, value, sub) {
+  document.getElementById('tt-label').textContent = label;
+  document.getElementById('tt-value').textContent = value;
+  document.getElementById('tt-sub').textContent = sub;
+  tooltip.classList.add('visible');
+  moveTip(e);
+}
+function moveTip(e) {
+  const x = e.clientX + 14, y = e.clientY - 20;
+  tooltip.style.left = Math.min(x, window.innerWidth-240)+'px';
+  tooltip.style.top = y+'px';
+}
+function hideTip() { tooltip.classList.remove('visible'); }
+
+// ============================================================
+// TAB SWITCH
+// ============================================================
+function switchTab(name) {
+  document.querySelectorAll('.content-area').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('content-'+name).classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+}
+
+// ============================================================
+// ===== TAB 1: PAYMENT TAB =====
+// ============================================================
+function buildPaymentTab() {
+  buildPaymentFilters();
+  buildDatashaderPayment();
+  buildHeatmapPayment();
+  buildUPIBars();
+  buildPaymentChart();
+}
+
+function buildPaymentFilters() {
+  const chips = ['All','Electronics','Fashion','Grocery','Jewellery','Beauty','Sports'];
+  const bar = document.getElementById('filter-payment');
+  chips.forEach((c,i) => {
+    const el = document.createElement('button');
+    el.className = 'filter-chip' + (i===0?' active':'');
+    el.textContent = c;
+    el.onclick = () => {
+      bar.querySelectorAll('.filter-chip').forEach(x=>x.classList.remove('active'));
+      el.classList.add('active');
+    };
+    bar.appendChild(el);
+  });
+}
+
+function buildDatashaderPayment() {
+  const canvas = document.getElementById('ds-payment-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth || 500;
+  canvas.height = canvas.offsetHeight || 280;
+  const W = canvas.width, H = canvas.height;
+
+  // Simulate GPU datashader density plot using random scatter
+  const clusters = [
+    {cx:0.15,cy:0.8,sx:0.08,sy:0.06,n:8000,col:'rgba(118,185,0,'},
+    {cx:0.35,cy:0.65,sx:0.07,sy:0.07,n:12000,col:'rgba(59,130,246,'},
+    {cx:0.55,cy:0.5,sx:0.09,sy:0.06,n:6000,col:'rgba(0,212,170,'},
+    {cx:0.7,cy:0.3,sx:0.06,sy:0.08,n:9000,col:'rgba(251,191,36,'},
+    {cx:0.85,cy:0.7,sx:0.07,sy:0.05,n:5000,col:'rgba(239,68,68,'},
+    {cx:0.45,cy:0.2,sx:0.08,sy:0.07,n:7000,col:'rgba(168,85,247,'},
+  ];
+
+  function gaussian() {
+    let u=0,v=0;
+    while(!u) u=Math.random();
+    while(!v) v=Math.random();
+    return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);
+  }
+
+  ctx.fillStyle = '#050505'; ctx.fillRect(0,0,W,H);
+
+  clusters.forEach(cl => {
+    for (let i=0; i<cl.n; i++) {
+      const x = (cl.cx + gaussian()*cl.sx)*W;
+      const y = (cl.cy + gaussian()*cl.sy)*H;
+      ctx.fillStyle = cl.col + (Math.random()*0.4+0.1)+')';
+      ctx.fillRect(Math.round(x), Math.round(y), 1, 1);
+    }
+  });
+
+  // Axis labels
+  ctx.fillStyle = '#555';
+  ctx.font = '10px Space Mono, monospace';
+  ctx.fillText('← UPI    Card    EMI    COD    Wallet →', 12, H-8);
+  ctx.save();
+  ctx.translate(14, H/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.fillText('← Books  Fashion  Elect  Jewel →', -60, 0);
+  ctx.restore();
+
+  // Legend
+  const legend = document.getElementById('legend-payment');
+  const pairs = [['UPI','#76b900'],['Credit Card','#3b82f6'],['Debit Card','#00d4aa'],['EMI','#fbbf24'],['Cash/COD','#ef4444'],['Wallet','#a855f7']];
+  legend.innerHTML = pairs.map(([l,c])=>`<div class="legend-item"><div class="legend-dot" style="background:${c}"></div><span>${l}</span></div>`).join('');
+}
+
+function buildHeatmapPayment() {
+  const container = document.getElementById('heatmap-container');
+  const cols = PAYMENT_METHODS.length;
+  const rows = CATEGORIES.length;
+  const allVals = PAYMENT_HEAT.flat();
+  const maxVal = Math.max(...allVals);
+
+  let html = `<div style="overflow-x:auto;padding:4px 0;">`;
+  html += `<table style="border-collapse:separate;border-spacing:3px;width:100%;">`;
+
+  // Header
+  html += '<thead><tr><td style="font-size:9px;color:#555;font-family:Space Mono,monospace;padding:2px 4px;"></td>';
+  PAYMENT_METHODS.forEach(p => {
+    html += `<td style="font-size:9px;color:#666;font-family:Space Mono,monospace;text-align:center;padding:2px 1px;white-space:nowrap;">${p.replace(' Card','').replace('Net ','')}</td>`;
+  });
+  html += '</tr></thead><tbody>';
+
+  CATEGORIES.forEach((cat,ri) => {
+    html += `<tr><td style="font-size:9px;color:#666;font-family:Space Mono,monospace;padding:2px 4px;white-space:nowrap;">${cat.substring(0,9)}</td>`;
+    PAYMENT_HEAT[ri].forEach((val,ci) => {
+      const intensity = val/maxVal;
+      const hue = intensity > 0.7 ? 120 : intensity > 0.4 ? 75 : 30;
+      const sat = 80+intensity*20;
+      const light = 15+intensity*35;
+      const alpha = 0.3+intensity*0.7;
+      html += `<td>
+        <div class="heatmap-cell"
+          style="background:hsla(${hue},${sat}%,${light}%,${alpha});height:22px;border-radius:3px;"
+          onmouseenter="showTip(event,'${cat} × ${PAYMENT_METHODS[ci]}','₹${val} Cr','${Math.round(intensity*100)}% of max')"
+          onmousemove="moveTip(event)"
+          onmouseleave="hideTip()"
+        ><span style="font-size:9px;color:rgba(255,255,255,0.7);">${val>200?val:''}</span></div>
+      </td>`;
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table></div>';
+  container.innerHTML = html;
+}
+
+function buildUPIBars() {
+  // UPI share % per category
+  const upiShare = CATEGORIES.map((cat,i) => ({
+    cat,
+    pct: Math.round(PAYMENT_HEAT[i][0] / PAYMENT_HEAT[i].reduce((a,b)=>a+b,0) * 100)
+  })).sort((a,b)=>b.pct-a.pct);
+
+  const container = document.getElementById('upi-bars');
+  const maxPct = Math.max(...upiShare.map(x=>x.pct));
+
+  container.innerHTML = upiShare.map(({cat,pct}) => {
+    const w = (pct/maxPct*100).toFixed(1);
+    const hue = pct > 55 ? 96 : pct > 40 ? 45 : 20;
+    return `<div class="bar-row">
+      <div class="bar-label">${cat}</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${w}%;background:hsl(${hue},80%,40%);">${pct}%</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function buildPaymentChart() {
+  const ctx = document.getElementById('chart-sankey').getContext('2d');
+  // Stacked bar per category showing payment mix
+  const topCats = CATEGORIES.slice(0,6);
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: topCats.map(c=>c.substring(0,8)),
+      datasets: PAYMENT_METHODS.slice(0,6).map((pm,i) => ({
+        label: pm,
+        data: topCats.map((_,ci) => {
+          const row = PAYMENT_HEAT[ci];
+          const total = row.reduce((a,b)=>a+b,0);
+          return Math.round(row[i]/total*100);
+        }),
+        backgroundColor: PAY_COLORS[i]+'cc',
+        borderWidth: 0,
+      }))
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { stacked: true, ticks: { color:'#666', font:{size:10} }, grid: { color:'#1a1a1a' } },
+        y: { stacked: true, ticks: { color:'#666', font:{size:10}, callback:v=>v+'%' }, grid: { color:'#1a1a1a' }, max:100 }
+      }
+    }
+  });
+}
+
+// ============================================================
+// ===== TAB 2: REGION TAB =====
+// ============================================================
+function buildRegionTab() {
+  buildRegionFilters();
+  buildRegionBar();
+  buildRadarRegion();
+  buildRegionHeatmap();
+}
+
+function buildRegionFilters() {
+  const chips = ['All Regions','North','South','West','East','Northeast'];
+  const bar = document.getElementById('filter-region');
+  chips.forEach((c,i) => {
+    const el = document.createElement('button');
+    el.className = 'filter-chip' + (i===0?' active':'');
+    el.textContent = c;
+    el.onclick = () => { bar.querySelectorAll('.filter-chip').forEach(x=>x.classList.remove('active')); el.classList.add('active'); };
+    bar.appendChild(el);
+  });
+}
+
+function buildRegionBar() {
+  const ctx = document.getElementById('chart-region-bar').getContext('2d');
+  const cats = Object.keys(REGION_DATA);
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: REGIONS.map(r=>r.split(' ')[0]),
+      datasets: cats.map((cat,i) => ({
+        label: cat,
+        data: REGION_DATA[cat],
+        backgroundColor: PAY_COLORS[i]+'cc',
+        borderWidth: 0,
+        borderRadius: 3,
+      }))
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color:'#666', font:{size:10} }, grid: { color:'#1a1a1a' } },
+        y: { ticks: { color:'#666', font:{size:10}, callback:v=>'₹'+v }, grid: { color:'#1a1a1a' } }
+      }
+    }
+  });
+}
+
+function buildRadarRegion() {
+  const ctx = document.getElementById('chart-radar').getContext('2d');
+  new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: REGIONS.map(r=>r.split(' ')[0]),
+      datasets: [
+        { label:'Electronics', data:[1.3,1.1,0.9,0.7,0.8,0.5,0.6,0.4], borderColor:'#76b900', backgroundColor:'rgba(118,185,0,0.1)', pointBackgroundColor:'#76b900', borderWidth:2 },
+        { label:'Fashion', data:[0.9,1.2,1.1,0.8,0.7,0.5,0.4,0.3], borderColor:'#3b82f6', backgroundColor:'rgba(59,130,246,0.1)', pointBackgroundColor:'#3b82f6', borderWidth:2 },
+        { label:'Grocery', data:[0.7,0.9,1.0,1.3,1.1,1.2,0.9,0.8], borderColor:'#00d4aa', backgroundColor:'rgba(0,212,170,0.1)', pointBackgroundColor:'#00d4aa', borderWidth:2 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        r: {
+          ticks: { color:'#555', backdropColor:'transparent', font:{size:9} },
+          grid: { color:'#222' }, pointLabels: { color:'#888', font:{size:10} },
+          min: 0, max: 1.5
+        }
+      }
+    }
+  });
+}
+
+function buildRegionHeatmap() {
+  const container = document.getElementById('region-heatmap-container');
+  const cats = Object.keys(REGION_DATA);
+  const allVals = cats.flatMap(c=>REGION_DATA[c]);
+  const maxVal = Math.max(...allVals);
+
+  let html = `<div style="overflow-x:auto;padding:4px 0;">`;
+  html += `<table style="border-collapse:separate;border-spacing:3px;width:100%;">`;
+  html += '<thead><tr><td style="font-size:9px;color:#555;padding:2px 6px;"></td>';
+  REGIONS.forEach(r => {
+    html += `<td style="font-size:9px;color:#666;text-align:center;padding:2px 3px;font-family:Space Mono,monospace;">${r.split(' ')[0]}</td>`;
+  });
+  html += '</tr></thead><tbody>';
+
+  cats.forEach((cat,ri) => {
+    html += `<tr><td style="font-size:10px;color:#888;padding:4px 6px;font-weight:500;">${cat}</td>`;
+    REGION_DATA[cat].forEach((val,ci) => {
+      const intensity = val/maxVal;
+      const c = `rgba(0,212,170,${0.15+intensity*0.85})`;
+      html += `<td><div class="heatmap-cell" style="background:${c};height:32px;border-radius:4px;"
+        onmouseenter="showTip(event,'${cat} — ${REGIONS[ci]}','₹${val} Cr','Index: ${(intensity*1.3).toFixed(2)}x avg')"
+        onmousemove="moveTip(event)" onmouseleave="hideTip()">
+        <span style="font-size:10px;font-weight:700;color:rgba(255,255,255,${0.5+intensity*0.5});">${val}</span>
+      </div></td>`;
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table></div>';
+  container.innerHTML = html;
+}
+
+// ============================================================
+// ===== TAB 3: SEGMENT TAB =====
+// ============================================================
+function buildSegmentTab() {
+  buildSegmentFilters();
+  buildSegmentSpendChart();
+  buildBubbleChart();
+  buildDonut('chart-donut-premium','donut-premium-legend',
+    ['Electronics','Luxury','Travel','Beauty','Dining'],
+    [38,22,18,14,8], ['#76b900','#3b82f6','#00d4aa','#fbbf24','#a855f7']);
+  buildDonut('chart-donut-mass','donut-mass-legend',
+    ['Grocery','Fashion','FMCG','Home','Electronics'],
+    [34,26,20,12,8], ['#76b900','#3b82f6','#00d4aa','#fbbf24','#ef4444']);
+  buildDonut('chart-donut-rural','donut-rural-legend',
+    ['FMCG','Agri Inputs','Fashion','Mobile','Grocery'],
+    [38,22,18,14,8], ['#76b900','#fbbf24','#00d4aa','#3b82f6','#a855f7']);
+  buildSegmentRadar();
+}
+
+function buildSegmentFilters() {
+  const chips = ['All Segments','Premium','Middle Class','Rural','Students'];
+  const bar = document.getElementById('filter-segment');
+  chips.forEach((c,i) => {
+    const el = document.createElement('button');
+    el.className = 'filter-chip' + (i===0?' active':'');
+    el.textContent = c;
+    el.onclick = () => { bar.querySelectorAll('.filter-chip').forEach(x=>x.classList.remove('active')); el.classList.add('active'); };
+    bar.appendChild(el);
+  });
+}
+
+function buildSegmentSpendChart() {
+  const ctx = document.getElementById('chart-segment-spend').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: SEGMENTS.map(s=>s.split(' ')[0]),
+      datasets: [{
+        label: 'Avg Spend (₹)',
+        data: SEG_SPEND,
+        backgroundColor: SEG_COLORS.map(c=>c+'cc'),
+        borderWidth: 0,
+        borderRadius: 6,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color:'#666', font:{size:10} }, grid: { color:'#1a1a1a' } },
+        y: { ticks: { color:'#666', font:{size:10}, callback:v=>'₹'+v.toLocaleString('en-IN') }, grid: { color:'#1a1a1a' } }
+      }
+    }
+  });
+}
+
+function buildBubbleChart() {
+  const ctx = document.getElementById('chart-bubble').getContext('2d');
+  new Chart(ctx, {
+    type: 'bubble',
+    data: {
+      datasets: SEGMENTS.map((seg,i) => ({
+        label: seg.split(' ')[0],
+        data: [{
+          x: SEG_FREQ[i],
+          y: SEG_SPEND[i],
+          r: Math.sqrt(SEG_COUNT[i]) * 6
+        }],
+        backgroundColor: SEG_COLORS[i]+'99',
+        borderColor: SEG_COLORS[i],
+        borderWidth: 1.5,
+      }))
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: {
+          title: { display: true, text: 'Orders/Month', color:'#666', font:{size:10} },
+          ticks: { color:'#666', font:{size:10} }, grid: { color:'#1a1a1a' },
+          min: 0.5, max: 5
+        },
+        y: {
+          title: { display: true, text: 'Avg Basket (₹)', color:'#666', font:{size:10} },
+          ticks: { color:'#666', font:{size:10}, callback:v=>'₹'+v.toLocaleString('en-IN') },
+          grid: { color:'#1a1a1a' }, min: 0, max: 10000
+        }
+      }
+    }
+  });
+}
+
+function buildDonut(canvasId, legendId, labels, data, colors) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{ data, backgroundColor: colors, borderWidth: 2, borderColor: '#111' }]
+    },
+    options: {
+      responsive: false,
+      cutout: '68%',
+      plugins: { legend: { display: false } }
+    }
+  });
+
+  const legendEl = document.getElementById(legendId);
+  legendEl.innerHTML = labels.map((l,i) => `
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+      <div style="width:8px;height:8px;border-radius:2px;background:${colors[i]};flex-shrink:0;"></div>
+      <span style="font-size:11px;color:#888;">${l}</span>
+      <span style="font-size:11px;color:#fff;margin-left:auto;">${data[i]}%</span>
+    </div>
+  `).join('');
+}
+
+function buildSegmentRadar() {
+  const ctx = document.getElementById('chart-radar-seg').getContext('2d');
+  new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: ['Brand Loyalty','Price Sensitivity','Mobile Usage','Returns Rate','Review Activity','Subscription'],
+      datasets: [
+        { label:'Premium', data:[92,15,88,8,85,78], borderColor:'#76b900', backgroundColor:'rgba(118,185,0,0.1)', pointBackgroundColor:'#76b900', borderWidth:2 },
+        { label:'Mass Market', data:[45,92,76,18,42,22], borderColor:'#3b82f6', backgroundColor:'rgba(59,130,246,0.1)', pointBackgroundColor:'#3b82f6', borderWidth:2 },
+        { label:'Rural Emerging', data:[28,88,94,12,25,8], borderColor:'#fbbf24', backgroundColor:'rgba(251,191,36,0.1)', pointBackgroundColor:'#fbbf24', borderWidth:2 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        r: {
+          ticks: { color:'#444', backdropColor:'transparent', font:{size:9}, stepSize:20 },
+          grid: { color:'#222' }, pointLabels: { color:'#888', font:{size:11} },
+          min: 0, max: 100
+        }
+      }
+    }
+  });
+}
+</script>
+</body>
+</html>
